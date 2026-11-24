@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pflege ND</string>
+    <string name="title_activity_main">Pflege ND</string>
+    <string name="package_name">com.bergmuehl.pflege</string>
+    <string name="custom_url_scheme">com.bergmuehl.pflege</string>
+</resources>

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pflege ND — Gece Vardiyası Asistanı</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --card-2: #1f2630;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #388bfd;
+      --ok: #2ea043;
+      --ok-soft: rgba(46, 160, 67, 0.16);
+      --danger: #f85149;
+      --danger-soft: rgba(248, 81, 73, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 14px;
+    }
+
+    .app {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--ok-soft);
+      color: #56d364;
+      border: 1px solid rgba(46, 160, 67, 0.4);
+    }
+
+    .notif-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notif-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      background: var(--card-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--accent); }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    button.ok {
+      background: var(--ok-soft);
+      border-color: rgba(46, 160, 67, 0.5);
+      color: #7ee787;
+    }
+
+    button.small {
+      padding: 5px 9px;
+      font-size: 0.78rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .laundry-strip {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .laundry-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    .step-pill.done {
+      background: var(--ok-soft);
+      border-color: rgba(46, 160, 67, 0.45);
+      color: #7ee787;
+      text-decoration: line-through;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .task-item label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--card-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+    }
+
+    .care-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .care-box {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .care-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.88rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+    }
+
+    .care-row:last-child { border-bottom: none; }
+
+    details.block {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    details.block summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.92rem;
+      list-style: none;
+    }
+
+    .alert-pill {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--danger-soft);
+      color: #ff7b72;
+    }
+
+    .emergency {
+      border-color: rgba(248, 81, 73, 0.45);
+      background: rgba(248, 81, 73, 0.06);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--card-2);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      z-index: 999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div>
+        <h1>Pflege ND — Gece Vardiyası Asistanı</h1>
+        <div class="sub" id="dateInfo">Oda: BERGMUEHL · Seniorenwohngemeinschaft Augsburg</div>
+      </div>
+      <span class="badge" id="ndBadge">● ND AKTİF (Vardiya Günü)</span>
+    </header>
+
+    <section class="notif-bar">
+      <div class="notif-row">
+        <div>
+          <strong>Görev Bildirimleri & Sesli Uyarı</strong>
+          <div class="sub" id="notifStatusText">5 dk önce ve tam saatinde bildirim + sesli uyarı hazır.</div>
+        </div>
+        <div class="btn-row">
+          <button class="primary small" id="btnRequestNotif">🔔 Bildirim İzni</button>
+          <button class="small" id="btnTestSound">🔊 Test Alarm/Ses</button>
+          <button class="small" id="btnTestNotif">Test Bildirim</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">
+        <span>Esnek Görevler</span>
+        <span class="sub" id="flexCount"></span>
+      </div>
+
+      <div class="laundry-strip" id="laundryStrip">
+        <div>
+          <strong>🧺 Çamaşır Bloğu</strong>
+          <div class="sub">Tek kartta 3 aşama</div>
+        </div>
+        <div class="laundry-steps">
+          <button type="button" class="step-pill" data-laundry="wash">1. Yıkama</button>
+          <button type="button" class="step-pill" data-laundry="dry">2. Kurutma</button>
+          <button type="button" class="step-pill" data-laundry="fold">3. Katlama</button>
+        </div>
+        <button type="button" class="ok small" id="btnCompleteLaundry">Hepsini Tamamla ✓</button>
+      </div>
+
+      <div class="task-list" id="flexTaskList"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">
+        <span>📋 Übergabe (Devir Teslim & Hasta Notu / Görev)</span>
+      </div>
+      <div class="form-grid">
+        <select id="uebergabePatient"></select>
+        <select id="uebergabeType">
+          <option value="note">💊 Hasta Notu / Ek İlaç</option>
+          <option value="task">☑️ Görev Ekle</option>
+        </select>
+        <input type="text" id="uebergabeText" placeholder="Örn: Ebner ek ilaç / Kastl ağrı..." />
+        <button type="button" class="primary" id="btnAddUebergabe">Kaydet</button>
+      </div>
+      <div class="task-list" id="uebergabeList"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">
+        <span>Bakım Özeti (Tur Sayacı)</span>
+      </div>
+      <div class="care-grid">
+        <div class="care-box">
+          <strong>🛏️ Yatalak / Bezli Bakım</strong>
+          <div id="bedriddenList"></div>
+        </div>
+        <div class="care-box">
+          <strong>🚽 Tuvalete Götürülenler</strong>
+          <div id="toiletList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">
+        <span>Saatli Vardiya Blokları</span>
+      </div>
+      <div id="scheduleBlocks" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </section>
+
+    <section class="card emergency">
+      <div class="card-title">
+        <span>🚨 Acil Destek — Pflegedienst Adelina</span>
+        <span>0176 22174520</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = "BERGMUEHL_PFLEGE_ND_V2";
+
+    const PATIENTS = [
+      "Wagner Franz (H)",
+      "Rydygier Irena (F)",
+      "Bogatzki Ruth (F)",
+      "Rees Winfried (H) — Kendi alıyor",
+      "Rausch Madelina (F) — Hapı erit",
+      "Theimer Klaus (H) — 07:00 sabah hapı",
+      "Göttfert Katharina (F)",
+      "Kolbe Elisabeth (F) — Kendi alıyor",
+      "Kastl Margot (F)",
+      "Ebner Franz (H) — 22:00 akşam hapı"
+    ];
+
+    const DEFAULT_STATE = {
+      laundry: { wash: false, dry: false, fold: false, completedAll: false },
+      flexTasks: [
+        { id: "f1", title: "Mutfak ve ortak alan genel kontrolü", done: false },
+        { id: "f2", title: "Çöp / geri dönüşüm kontrolü", done: false },
+        { id: "f3", title: "Gece sessizlik ve kapı/pencere kontrolü", done: false }
+      ],
+      uebergabe: [],
+      bedridden: [
+        { name: "Theimer Klaus (H)", count: 0 },
+        { name: "Kastl Margot (F)", count: 0 },
+        { name: "Göttfert Katharina (F)", count: 0 }
+      ],
+      toilet: [
+        { name: "Bogatzki Ruth (F)", count: 0 },
+        { name: "Rausch Madelina (F)", count: 0 }
+      ],
+      notifiedKeys: []
+    };
+
+    const SCHEDULE_ALERTS = [
+      { time: "19:30", label: "Vardiya başlangıcı ve devir teslim kontrolü" },
+      { time: "20:00", label: "Akşam ilaç grubu (9 sakin) kontrolü" },
+      { time: "22:00", label: "Ebner Franz akşam ilacı verilecek" },
+      { time: "00:00", label: "Gece yarısı tur ve güvenlik kontrolü" },
+      { time: "04:30", label: "Sabaha karşı bez ve tuvalet turu" },
+      { time: "05:00", label: "Mutfak ve ekmek hazırlık kontrolü" },
+      { time: "06:00", label: "Sabah bakım hazırlık kontrolü" },
+      { time: "07:00", label: "Theimer Klaus sabah ilacı verilecek" }
+    ];
+
+    let state = loadState();
+    let notifCounter = 100;
+
+    function getCapLocalNotif() {
+      const cap = window.Capacitor;
+      if (cap && cap.Plugins && cap.Plugins.LocalNotifications) {
+        return cap.Plugins.LocalNotifications;
+      }
+      return null;
+    }
+
+    function playAlarmTone() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const notes = [880, 1174.66, 880];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.22, ctx.currentTime + idx * 0.22);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.22 + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.22);
+          osc.stop(ctx.currentTime + idx * 0.22 + 0.21);
+        });
+      } catch {}
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        return { ...structuredClone(DEFAULT_STATE), ...JSON.parse(raw) };
+      } catch {
+        return structuredClone(DEFAULT_STATE);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {}
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { el.style.display = "none"; }, 3400);
+    }
+
+    function updateDateHeader() {
+      const now = new Date();
+      const formatted = now.toLocaleDateString("tr-TR", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
+      document.getElementById("dateInfo").textContent =
+        `${formatted} · Oda: BERGMUEHL · ND Otomatik Aktif`;
+    }
+
+    function renderLaundry() {
+      const strip = document.getElementById("laundryStrip");
+      if (state.laundry.completedAll) {
+        strip.style.display = "none";
+        return;
+      }
+      strip.style.display = "flex";
+      document.querySelectorAll(".step-pill").forEach((btn) => {
+        const key = btn.getAttribute("data-laundry");
+        btn.classList.toggle("done", Boolean(state.laundry[key]));
+      });
+    }
+
+    function renderFlexTasks() {
+      const list = document.getElementById("flexTaskList");
+      const active = state.flexTasks.filter((t) => !t.done);
+      document.getElementById("flexCount").textContent = `${active.length} bekleyen`;
+      list.innerHTML = "";
+      if (active.length === 0) {
+        list.innerHTML = `<div class="sub">Tüm esnek görevler tamamlandı.</div>`;
+        return;
+      }
+      active.forEach((task) => {
+        const row = document.createElement("div");
+        row.className = "task-item";
+        row.innerHTML = `
+          <label>
+            <input type="checkbox" data-flex="${task.id}" />
+            <span>${task.title}</span>
+          </label>
+        `;
+        row.querySelector("input").addEventListener("change", () => {
+          task.done = true;
+          saveState();
+          renderFlexTasks();
+          showToast(`Tamamlandı: ${task.title}`);
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function populatePatients() {
+      const sel = document.getElementById("uebergabePatient");
+      sel.innerHTML = `<option value="Genel / Vardiya Notu">Genel / Vardiya Notu</option>`;
+      PATIENTS.forEach((p) => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        sel.appendChild(opt);
+      });
+    }
+
+    function renderUebergabe() {
+      const list = document.getElementById("uebergabeList");
+      list.innerHTML = "";
+      if (state.uebergabe.length === 0) {
+        list.innerHTML = `<div class="sub">Henüz Übergabe kaydı yok.</div>`;
+        return;
+      }
+      state.uebergabe.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "task-item";
+        const tag = item.type === "task" ? "☑️ Görev" : "💊 Not";
+        div.innerHTML = `
+          <div>
+            <strong>${item.patient}</strong> · <span class="sub">${tag}</span>
+            <div>${item.text}</div>
+          </div>
+          <button type="button" class="small" data-del="${idx}">Sil</button>
+        `;
+        div.querySelector("[data-del]").addEventListener("click", () => {
+          state.uebergabe.splice(idx, 1);
+          saveState();
+          renderUebergabe();
+        });
+        list.appendChild(div);
+      });
+    }
+
+    function renderCareGroup(containerId, arr) {
+      const box = document.getElementById(containerId);
+      box.innerHTML = "";
+      arr.forEach((person) => {
+        const row = document.createElement("div");
+        row.className = "care-row";
+        row.innerHTML = `
+          <span>${person.name}</span>
+          <button type="button" class="small ${person.count > 0 ? "ok" : ""}">
+            ${person.count > 0 ? `✓ ${person.count}x` : "+ Kontrol"}
+          </button>
+        `;
+        row.querySelector("button").addEventListener("click", () => {
+          person.count += 1;
+          saveState();
+          renderCareGroup(containerId, arr);
+        });
+        box.appendChild(row);
+      });
+    }
+
+    function renderSchedule() {
+      const wrap = document.getElementById("scheduleBlocks");
+      wrap.innerHTML = "";
+      SCHEDULE_ALERTS.forEach((item) => {
+        const patientNotes = state.uebergabe.filter(
+          (u) => item.time === "22:00" && u.patient.includes("Ebner")
+        );
+        const det = document.createElement("details");
+        det.className = "block";
+        det.innerHTML = `
+          <summary>${item.time} — ${item.label}</summary>
+          ${patientNotes.map((n) => `<div class="alert-pill">${n.patient}: ${n.text}</div>`).join("")}
+        `;
+        wrap.appendChild(det);
+      });
+    }
+
+    async function sendTaskNotification(title, body) {
+      showToast(`${title}: ${body}`);
+      playAlarmTone();
+
+      const capLocal = getCapLocalNotif();
+      if (capLocal) {
+        try {
+          notifCounter += 1;
+          await capLocal.schedule({
+            notifications: [
+              {
+                id: notifCounter,
+                title,
+                body,
+                schedule: { at: new Date(Date.now() + 300) }
+              }
+            ]
+          });
+          return;
+        } catch {}
+      }
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification(title, { body });
+        } catch {}
+      }
+    }
+
+    function checkScheduledNotifications() {
+      const now = new Date();
+      const curMinutes = now.getHours() * 60 + now.getMinutes();
+      const dayKey = now.toISOString().slice(0, 10);
+
+      SCHEDULE_ALERTS.forEach((item) => {
+        const [hh, mm] = item.time.split(":").map(Number);
+        const targetMinutes = hh * 60 + mm;
+
+        if (curMinutes === targetMinutes - 5) {
+          const key = `${dayKey}-${item.time}-pre5`;
+          if (!state.notifiedKeys.includes(key)) {
+            state.notifiedKeys.push(key);
+            saveState();
+            sendTaskNotification(`5 dk sonra (${item.time})`, item.label);
+          }
+        }
+        if (curMinutes === targetMinutes) {
+          const key = `${dayKey}-${item.time}-exact`;
+          if (!state.notifiedKeys.includes(key)) {
+            state.notifiedKeys.push(key);
+            saveState();
+            sendTaskNotification(`Saat ${item.time} Görevi`, item.label);
+          }
+        }
+      });
+    }
+
+    document.querySelectorAll(".step-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.getAttribute("data-laundry");
+        state.laundry[key] = !state.laundry[key];
+        saveState();
+        renderLaundry();
+      });
+    });
+
+    document.getElementById("btnCompleteLaundry").addEventListener("click", () => {
+      state.laundry = { wash: true, dry: true, fold: true, completedAll: true };
+      saveState();
+      renderLaundry();
+      showToast("Çamaşır bloğu tamamlandı");
+    });
+
+    document.getElementById("btnAddUebergabe").addEventListener("click", () => {
+      const input = document.getElementById("uebergabeText");
+      const text = input.value.trim();
+      if (!text) return;
+      const patient = document.getElementById("uebergabePatient").value;
+      const type = document.getElementById("uebergabeType").value;
+      state.uebergabe.unshift({ patient, type, text });
+      input.value = "";
+      saveState();
+      renderUebergabe();
+      renderSchedule();
+      showToast("Übergabe kaydı eklendi");
+    });
+
+    document.getElementById("btnRequestNotif").addEventListener("click", async () => {
+      const capLocal = getCapLocalNotif();
+      if (capLocal) {
+        try {
+          const res = await capLocal.requestPermissions();
+          document.getElementById("notifStatusText").textContent =
+            `Android Bildirim İzni: ${res.display || "granted"}`;
+          showToast(`Bildirim izni: ${res.display || "granted"}`);
+          return;
+        } catch {}
+      }
+
+      if (!("Notification" in window)) {
+        showToast("Sesli uyarı aktif; bildirim izni desteklenmiyor.");
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      document.getElementById("notifStatusText").textContent = `Bildirim izni: ${perm}`;
+      showToast(`Bildirim izni: ${perm}`);
+    });
+
+    document.getElementById("btnTestSound").addEventListener("click", () => {
+      playAlarmTone();
+      showToast("Sesli uyarı çalındı");
+    });
+
+    document.getElementById("btnTestNotif").addEventListener("click", () => {
+      sendTaskNotification("Ebner'in ilacı verilecek", "22:00 akşam ilacı hatırlatması");
+    });
+
+    updateDateHeader();
+    populatePatients();
+    renderLaundry();
+    renderFlexTasks();
+    renderUebergabe();
+    renderCareGroup("bedriddenList", state.bedridden);
+    renderCareGroup("toiletList", state.toilet);
+    renderSchedule();
+    checkScheduledNotifications();
+    setInterval(checkScheduledNotifications, 20000);
+  </script>
+</body>
+</html>
